@@ -13,6 +13,7 @@ const app = express();
 connectDB();
 
 app.use(cors());
+app.use('/uploads', express.static('uploads'));
 
 // Init Middleware
 app.use(express.json());

@@ -1,41 +1,41 @@
 // routes/bookRoutes.js
 const express = require('express');
 const router = express.Router();
-const Book = require('../models/Book'); // Make sure this is correctly defined
+const upload = require('../middleware/upload');
 
-// Route to add a new book
-// Route to add a new book
-router.post('/', async (req, res) => {
-    const { title, author, genre, publicationDate, isAvailable } = req.body;
-    
-    console.log('Received data:', req.body); // Log request body to debug
-  
-    try {
-      const newBook = new Book({
-        title,
-        author,
-        genre,
-        publicationDate,
-        isAvailable: isAvailable !== undefined ? isAvailable : true,
-      });
-  
-      const book = await newBook.save();
-      res.json(book);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
-    }
-  });
+// Import your Book model
+const Book = require('../models/Book');
 
-// Route to get all books
-router.get('/', async (req, res) => {
+// Route to add a book with an image upload
+router.post('/add-book', upload.single('image'), async (req, res) => {
+  const { title, author, genre, publicationDate, isAvailable } = req.body;
+
   try {
-    const books = await Book.find(); // Fetch all books from the database
-    res.json(books); // Send the books as a JSON response
+    const newBook = new Book({
+      title,
+      author,
+      genre,
+      publicationDate,
+      isAvailable: isAvailable !== undefined ? isAvailable : true,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : null, // Save the file path if uploaded
+    });
+
+    const book = await newBook.save();
+    res.json(book);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
-module.exports = router; // Export the router
+router.get('/', async (req, res) => {
+    try {
+      const books = await Book.find();
+      res.json(books);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  });
+
+module.exports = router;
