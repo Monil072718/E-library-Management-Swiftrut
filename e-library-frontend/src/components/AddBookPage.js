@@ -1,4 +1,3 @@
-// src/components/AddBookPage.jsx
 import React, { useState } from 'react';
 import API from '../api';
 import { useNavigate } from 'react-router-dom';
@@ -14,40 +13,43 @@ const AddBookPage = () => {
     image: null, // For image file
   });
 
-  const { title, author, genre, publicationDate, isAvailable, image } = formData;
-  const navigate = useNavigate(); // To redirect after adding the book
+  const navigate = useNavigate();
 
+  // Handle text input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle file input change
   const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] }); // Set the selected image file
+    setFormData({ ...formData, image: e.target.files[0] });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData(); // Use FormData to send files
-    formDataToSend.append('title', title);
-    formDataToSend.append('author', author);
-    formDataToSend.append('genre', genre);
-    formDataToSend.append('publicationDate', publicationDate);
-    formDataToSend.append('isAvailable', isAvailable);
-    if (image) {
-      formDataToSend.append('image', image); // Append image if it exists
+
+    const formDataToSend = new FormData(); // Create a new FormData object
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('author', formData.author);
+    formDataToSend.append('genre', formData.genre);
+    formDataToSend.append('publicationDate', formData.publicationDate);
+    formDataToSend.append('isAvailable', formData.isAvailable);
+    if (formData.image) {
+      formDataToSend.append('image', formData.image); // Append image file to FormData
     }
 
     try {
-      await API.post('/books/add-book', formDataToSend, {
+      const res = await API.post('/books/add-book', formDataToSend, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Important for file upload
+          'Content-Type': 'multipart/form-data',
         },
       });
       toast.success('Book added successfully!');
-      navigate('/books'); // Redirect to book list after successful addition
+      navigate('/books');
     } catch (err) {
-      toast.error('Error adding book!');
       console.error(err.response ? err.response.data : err.message);
+      toast.error('Error adding book!');
     }
   };
 
@@ -61,7 +63,7 @@ const AddBookPage = () => {
             <input
               type="text"
               name="title"
-              value={title}
+              value={formData.title}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -73,7 +75,7 @@ const AddBookPage = () => {
             <input
               type="text"
               name="author"
-              value={author}
+              value={formData.author}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -85,7 +87,7 @@ const AddBookPage = () => {
             <input
               type="text"
               name="genre"
-              value={genre}
+              value={formData.genre}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -97,7 +99,7 @@ const AddBookPage = () => {
             <input
               type="date"
               name="publicationDate"
-              value={publicationDate}
+              value={formData.publicationDate}
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -116,7 +118,7 @@ const AddBookPage = () => {
             <label className="block text-gray-700 font-semibold mb-2">Availability</label>
             <select
               name="isAvailable"
-              value={isAvailable}
+              value={formData.isAvailable}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
@@ -127,8 +129,7 @@ const AddBookPage = () => {
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-         
-            >
+          >
             Add Book
           </button>
         </form>

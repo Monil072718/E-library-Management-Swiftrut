@@ -22,14 +22,25 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await API.post('/auth/register', formData);
-      localStorage.setItem('token', res.data.token); // Store the token (optional)
-      toast.success('Registration successful!'); // Show success message
-      navigate('/login'); // Redirect to login page after successful registration
+  
+      // Log the response to check if it's coming as expected
+      console.log('Response from Register API:', res);
+  
+      if (res && res.data) {
+        localStorage.setItem('token', res.data.token);
+        toast.success('Registration successful!');
+        navigate('/login'); // Redirect to login page after registration
+      } else {
+        throw new Error('Unexpected response format');
+      }
     } catch (err) {
-      toast.error('Error registering user!'); // Show error message
-      console.error(err.response.data);
+      toast.error('Error registering user!');
+      console.error('Error registering user:', err.response ? err.response.data : err.message);
     }
   };
+  
+  
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
@@ -85,3 +96,6 @@ const Register = () => {
 };
 
 export default Register;
+
+
+

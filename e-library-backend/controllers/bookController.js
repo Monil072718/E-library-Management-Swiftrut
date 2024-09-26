@@ -62,8 +62,8 @@ exports.returnBook = async (req, res) => {
 // Get all books
 exports.getBooks = async (req, res) => {
     try {
-      const books = await Book.find();
-      res.json(books);
+      const books = await Book.find(); // Fetch all books from the database
+      res.json(books); // Send the books as a JSON response
     } catch (error) {
       console.error(error.message);
       res.status(500).send('Server error');

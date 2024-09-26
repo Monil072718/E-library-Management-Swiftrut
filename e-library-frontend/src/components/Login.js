@@ -21,14 +21,25 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await API.post('/auth/login', formData);
-      localStorage.setItem('token', res.data.token); // Store the token
-      toast.success('Login successful!'); // Show success message
-      navigate('/books'); // Redirect to the home page after successful login
+  
+      // Log the response to check if it's coming as expected
+      console.log('Response from Login API:', res);
+  
+      if (res && res.data) {
+        localStorage.setItem('token', res.data.token);
+        toast.success('Login successful!');
+        navigate('/books'); // Redirect to books page
+      } else {
+        throw new Error('Unexpected response format');
+      }
     } catch (err) {
-      toast.error('Error logging in!'); // Show error message
-      console.error(err.response.data);
+      toast.error('Error logging in!');
+      console.error('Error logging in:', err.response ? err.response.data : err.message);
     }
   };
+  
+  
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-indigo-600">
@@ -72,3 +83,6 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
