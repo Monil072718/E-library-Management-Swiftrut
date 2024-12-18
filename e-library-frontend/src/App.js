@@ -1,25 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import BookList from './components/BookList';
-import Register from './components/Register';
-import Login from './components/Login';
-import PrivateRoute from './components/PrivateRoute';
-import AddBookPage from './components/AddBookPage';
+import ViewBook from './components/ViewBook';
 import Navbar from './components/Navbar';
+import AddBookPage from './components/AddBookPage';
+import Login from './components/Login';
+import Register from './components/Register';
 
-const App = () => {
+function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/books" element={<BookList />} />
-        <Route path="/add-book" element={<PrivateRoute><AddBookPage /></PrivateRoute>} />
         <Route path="/" element={<BookList />} />
+        <Route path="/books" element={<BookList />} />
+        <Route path="/books/:bookId" element={<ViewBook />} /> {/* View Book Route */}
+        <Route path="/add-book" element={<AddBookPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

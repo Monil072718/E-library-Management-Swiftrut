@@ -22,6 +22,9 @@ const authRoutes = require('./routes/authRoutes');
 // Mount the routes
 app.use('/api/auth', authRoutes); // Make sure '/api/auth' is properly mounted
 app.use('/api/books', bookRoutes); // Ensure the /api/books route is used here
+// Serve static files from the uploads directory
+app.use('/uploads', express.static('uploads'));
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
